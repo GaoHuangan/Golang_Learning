@@ -1,0 +1,52 @@
+package main
+
+import (
+
+"LearningProject/Part5BufferedChannel"
+"sync"
+)
+/*
+🔍 程序解释：
+部分	说明
+make(chan int, 5)	创建一个容量为 5 的缓冲通道
+ch <- i	生产者向通道中写数据
+如果缓冲区未满	生产者不会被阻塞
+如果缓冲区已满	生产者将被阻塞，直到消费者读取一个数据
+*/
+func main() {
+	ch:=make(chan int,5)	// Buffered channel with capacity 5
+	var wg sync.WaitGroup
+
+	// started producer
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		Part5BufferedChannel.Producer(ch)
+	}()
+
+	// Start 2 independent consumer
+	for i := 1; i <= 2; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			Part5BufferedChannel.Consumer(id,ch)
+		}(i)
+	}
+
+	/*
+	✅ 改进点总结：
+    改进点	说明
+    每个消费者都单独开 goroutine	实现真正的并发消费
+    for + 匿名函数 + 参数传递	避免闭包变量陷阱，确保 id 正确
+    wg.Add 只对实际 goroutine 数加	避免卡死或提前结束问题
+	*/
+
+	//go func() {
+	//	defer wg.Done()
+	//	Part5BufferedChannel.Consumer(1,ch)
+	//	Part5BufferedChannel.Consumer(2,ch)
+	//}()
+
+	wg.Wait()
+
+}

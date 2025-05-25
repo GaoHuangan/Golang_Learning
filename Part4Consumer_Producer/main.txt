@@ -1,0 +1,44 @@
+package main
+
+import (
+"LearningProject/Part4Consumer_Producer"
+"sync"
+
+)
+
+func main() {
+	ch := make(chan int)
+
+	//✅ 解决方案二（更推荐）：使用 sync.WaitGroup
+	//这是更标准的做法，控制并发协程是否完成：
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		Part4Consumer_Producer.Producer(ch)
+	}()
+
+	go func() {
+		defer wg.Done()
+		Part4Consumer_Producer.Consumer(1,ch)
+		Part4Consumer_Producer.Consumer(2,ch)
+
+	}()
+
+	//go func() {
+	//	defer wg.Done()
+	//	Part4Consumer_Producer.Consumer2(ch)
+	//}()
+
+	wg.Wait() // 等待两个 goroutine 完成
+
+
+	//go Part4Consumer_Producer.Producer(ch)
+	//go Part4Consumer_Producer.Consumer(ch)
+	//✅ 解决方案一：用 time.Sleep() 暂时阻塞主线程
+	//这是最简单粗暴但有效的方法（学习阶段可用）：
+	//time.Sleep(10 * time.Second) // 给足够时间让 goroutine 执行
+
+
+}

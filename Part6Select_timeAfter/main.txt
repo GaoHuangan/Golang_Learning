@@ -1,0 +1,39 @@
+package main
+import (
+
+"LearningProject/Part6Select_timeAfter"
+"sync"
+)
+
+func main() {
+	ch := make(chan int)
+
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		Part6Select_timeAfter.Producer(ch)
+	}()
+
+	go func() {
+		defer wg.Done()
+		Part6Select_timeAfter.Consumer(ch)
+
+	}()
+	wg.Wait()
+
+/*	go func() {
+		time.Sleep(time.Second*3)	// Simulate slow producer
+		ch <- 42
+	}()
+
+	select {
+	case value := <-ch:
+		fmt.Println(value)
+
+	case <-time.After(time.Second*2):
+		fmt.Println("Timeout! No response from channel.")
+
+	}*/
+}
