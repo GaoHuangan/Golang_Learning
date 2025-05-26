@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// 创建一个通信通道。
+// create a channel
 func woker(ch chan string) {
 	time.Sleep(2 * time.Second)
 	ch <- "job is finished"
