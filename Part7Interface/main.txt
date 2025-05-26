@@ -8,6 +8,13 @@ import (
 func main() {
 
 
+	car:=Part7Interface.Car{Brand: "Toyota"}
+	person := Part7Interface.Person{Name: "Nickel"}
+
+	// Procedures will be executed according to different struct.
+	Part7Interface.Driver(car)
+	Part7Interface.Driver(person)
+
 	var s Part7Interface.Speaker	// Declare a variable of interface type
 	s=Part7Interface.Dog{}			// Assign a struct that implements the interface
 	fmt.Println(s.Speak())			// Output: Woof!
